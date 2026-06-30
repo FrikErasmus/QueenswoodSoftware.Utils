@@ -1,0 +1,6 @@
+Copyright (c) Katlego Solutions.
+
+All rights reserved.
+
+This package and source code are proprietary and confidential.
+Use, distribution, or modification is permitted only with explicit written permission from Katlego Solutions.
