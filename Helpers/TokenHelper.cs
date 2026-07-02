@@ -1,6 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 
-namespace Library.Helpers;
+namespace QueenswoodSoftware.Utils.Helpers;
 
 public static class TokenHelper
 {

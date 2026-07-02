@@ -1,4 +1,4 @@
-namespace Library.Helpers;
+namespace QueenswoodSoftware.Utils.Helpers;
 
 public class PagedResult<T>
 {

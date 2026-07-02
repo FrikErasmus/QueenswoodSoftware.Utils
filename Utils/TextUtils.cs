@@ -1,4 +1,4 @@
-﻿namespace Library.Utils
+﻿namespace QueenswoodSoftware.Utils.Utils
 {
     /// <summary>
     /// Provides static helpers for inspecting, transforming, and encoding text values.

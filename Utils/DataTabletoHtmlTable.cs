@@ -1,4 +1,4 @@
-﻿namespace Library.Utils;
+﻿namespace QueenswoodSoftware.Utils.Utils;
 
 public class DataTableToHtmlTable
 {

@@ -1,4 +1,4 @@
-﻿namespace Library.Models;
+﻿namespace QueenswoodSoftware.Utils.Models;
 
 /// <summary>
 /// Email message definition for SMTP sending.

@@ -1,6 +1,6 @@
 using System.IO.Compression;
 
-namespace Library.Helpers;
+namespace QueenswoodSoftware.Utils.Helpers;
 
 public static class CompressionHelper
 {

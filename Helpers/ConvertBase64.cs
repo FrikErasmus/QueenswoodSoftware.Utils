@@ -1,4 +1,4 @@
-﻿namespace Library.Helpers
+﻿namespace QueenswoodSoftware.Utils.Helpers
 {
     /// <summary>
     /// Base64 encoding helpers and image MIME type detection from file magic bytes.

@@ -1,4 +1,4 @@
-﻿namespace Library.Utils
+﻿namespace QueenswoodSoftware.Utils.Utils
 {
     /// <summary>
     /// Provides static helpers for interpreting GPS location data such as heading, speed, and freshness.

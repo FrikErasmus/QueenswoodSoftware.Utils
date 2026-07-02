@@ -1,4 +1,6 @@
-﻿namespace Library.Helpers
+﻿using QueenswoodSoftware.Utils.Models;
+
+namespace QueenswoodSoftware.Utils.Helpers
 {
     /// <summary>
     /// Provides abbreviated month name and value pairs for UI selection lists.
@@ -65,7 +67,6 @@
 
             return (startOfWeek, endOfWeek);
         }
-
 
         /// <summary>
         /// Builds ISO week records for each year in an inclusive range.

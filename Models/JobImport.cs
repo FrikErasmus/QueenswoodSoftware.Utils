@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Library.Models
+﻿namespace QueenswoodSoftware.Utils.Models
 {
+    /// <summary>
+    /// Represents the payload for importing job data.
+    /// </summary>
     public class JobImportPayload
     {
         public string? Version { get; set; }
@@ -13,6 +10,9 @@ namespace Library.Models
         public List<CaseItem> Cases { get; set; }
     }
 
+    /// <summary>
+    /// Represents an individual case item in the import payload.
+    /// </summary>
     public class CaseItem
     {
         public string? CaseReference { get; set; }
@@ -45,6 +45,9 @@ namespace Library.Models
         public int? UnitLocationID { get; set; }
     }
 
+    /// <summary>
+    /// Represents a site visit in the import payload.
+    /// </summary>
     public class SiteVisit
     {
         public DateTime BookedDateTime { get; set; }
@@ -53,6 +56,9 @@ namespace Library.Models
         public Technician Technician { get; set; }
     }
 
+    /// <summary>
+    /// Represents an address in the import payload.
+    /// </summary>
     public class Address
     {
         public string? Address1 { get; set; }
@@ -66,6 +72,9 @@ namespace Library.Models
         public string? PostalCode { get; set; }
     }
 
+    /// <summary>
+    /// Represents a technician in the import payload.
+    /// </summary>
     public class Technician
     {
         public long TechnicianId { get; set; }
@@ -74,6 +83,10 @@ namespace Library.Models
         public string? TechFitmentCentre { get; set; }
         public string? TechEmail { get; set; }
     }
+
+    /// <summary>
+    /// Represents a vehicle in the import payload.
+    /// </summary>
     public class Vehicle
     {
         public string? Channel { get; set; }
@@ -100,6 +113,9 @@ namespace Library.Models
         public List<EmergencyContact>? EmergencyContacts { get; set; }
     }
 
+    /// <summary>
+    /// Represents an emergency contact in the import payload.
+    /// </summary>
     public class EmergencyContact
     {
         public string? ContactName { get; set; }
@@ -107,6 +123,9 @@ namespace Library.Models
         public string? ContactEmail { get; set; }
     }
 
+    /// <summary>
+    /// Represents a contact in the import payload.
+    /// </summary>
     public class Contact
     {
         public long PersonId { get; set; }
@@ -115,6 +134,10 @@ namespace Library.Models
         public string? BusinessPhone { get; set; }
         public string? Email { get; set; }
     }
+
+    /// <summary>
+    /// Represents sales options in the import payload.
+    /// </summary>
     public class SalesOptions
     {
         public int TwoThreeWire { get; set; }
@@ -124,11 +147,19 @@ namespace Library.Models
         public string? HardwarePlatform { get; set; }
         public List<Feature>? Features { get; set; }
     }
+
+    /// <summary>
+    /// Represents a feature in the import payload.
+    /// </summary>
     public class Feature
     {
         public string? FeatureName { get; set; }
         public List<Option>? Options { get; set; }
     }
+
+    /// <summary>
+    /// Represents an option in the import payload.
+    /// </summary>
     public class Option
     {
         public int OptionId { get; set; }

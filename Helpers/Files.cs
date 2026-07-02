@@ -1,4 +1,4 @@
-﻿namespace Library.Helpers
+﻿namespace QueenswoodSoftware.Utils.Helpers
 {
     /// <summary>
     /// File system checks, MD5 checksum helpers, and chunked file equality comparison.

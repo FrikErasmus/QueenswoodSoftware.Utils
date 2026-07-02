@@ -1,4 +1,6 @@
-﻿namespace Library.Helpers
+﻿using QueenswoodSoftware.Utils.Models;
+
+namespace QueenswoodSoftware.Utils.Helpers
 {
     /// <summary>
     /// Validates uploaded file types and sizes and saves files to a wwwroot subfolder.

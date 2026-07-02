@@ -1,4 +1,4 @@
-﻿namespace Library.Models;
+﻿namespace QueenswoodSoftware.Utils.Models;
 
 /// <summary>
 /// Geographic location with optional GPS metadata and derived flags.

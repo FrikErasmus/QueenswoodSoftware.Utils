@@ -1,6 +1,7 @@
 using System.ComponentModel;
+using QueenswoodSoftware.Utils.Models;
 
-namespace Library.Helpers;
+namespace QueenswoodSoftware.Utils.Helpers;
 
 public static class EnumHelper
 {

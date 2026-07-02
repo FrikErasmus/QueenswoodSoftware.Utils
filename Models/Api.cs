@@ -1,4 +1,4 @@
-﻿namespace Library.Models;
+﻿namespace QueenswoodSoftware.Utils.Models;
 
 /// <summary>
 /// API-related model types for SQL command construction.

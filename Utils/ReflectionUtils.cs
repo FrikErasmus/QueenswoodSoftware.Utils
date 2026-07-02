@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace Library.Utils
+﻿namespace QueenswoodSoftware.Utils.Utils
 {
     /// <summary>
     /// Provides static helpers for reading and writing object members via reflection.

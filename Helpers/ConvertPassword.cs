@@ -1,4 +1,4 @@
-﻿namespace Library.Helpers;
+﻿namespace QueenswoodSoftware.Utils.Helpers;
 
 /// <summary>
 /// Temporary password selection and Triple-DES encryption helpers for legacy password flows.

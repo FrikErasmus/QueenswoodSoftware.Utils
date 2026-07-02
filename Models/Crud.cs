@@ -1,4 +1,4 @@
-﻿namespace Library.Models
+﻿namespace QueenswoodSoftware.Utils.Models
 {
     /// <summary>
     /// CRUD and lifecycle operations for data entities.

@@ -1,4 +1,4 @@
-namespace Library.Helpers;
+namespace QueenswoodSoftware.Utils.Helpers;
 
 public static class CollectionHelper
 {
@@ -17,6 +17,12 @@ public static class CollectionHelper
                 yield return item;
     }
 
+    /// <summary>
+    /// Flattens a sequence of sequences into a single sequence.
+    /// </summary>
+    /// <param name="source"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
     public static IEnumerable<T> Flatten<T>(this IEnumerable<IEnumerable<T>> source) =>
         source.SelectMany(x => x);
 

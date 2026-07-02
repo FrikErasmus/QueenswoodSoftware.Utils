@@ -1,6 +1,4 @@
-using System.Web;
-
-namespace Library.Helpers;
+namespace QueenswoodSoftware.Utils.Helpers;
 
 public static class HtmlHelper
 {

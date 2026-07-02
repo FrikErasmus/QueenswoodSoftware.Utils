@@ -1,4 +1,4 @@
-﻿namespace Library.Models;
+﻿namespace QueenswoodSoftware.Utils.Models;
 
 /// <summary>
 /// Represents an uploaded file held in memory or on disk.

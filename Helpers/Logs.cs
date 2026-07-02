@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
-using System.Reflection;
-
-namespace Library.Helpers
+﻿namespace QueenswoodSoftware.Utils.Helpers
 {
     /// <summary>
     /// Logger File Destination

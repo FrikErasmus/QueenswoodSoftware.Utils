@@ -1,4 +1,4 @@
-﻿namespace Library.Models;
+﻿namespace QueenswoodSoftware.Utils.Models;
 
 /// <summary>
 /// Session token metadata for authenticated users.

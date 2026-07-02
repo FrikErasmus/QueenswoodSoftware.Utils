@@ -1,4 +1,5 @@
-﻿namespace Library.Helpers;
+﻿namespace QueenswoodSoftware.Utils.Helpers;
+
 /// <summary>
 /// Cryptographic hash and HMAC helpers that return lowercase hexadecimal strings.
 /// </summary>
@@ -14,6 +15,7 @@ public static class HashHelper
         if (input == null) throw new ArgumentNullException(nameof(input));
         return Sha256(Encoding.UTF8.GetBytes(input));
     }
+
     /// <summary>
     /// Computes the SHA-256 hash of a byte array.
     /// </summary>
@@ -26,6 +28,7 @@ public static class HashHelper
         var hash = sha.ComputeHash(input);
         return Convert.ToHexString(hash).ToLowerInvariant();
     }
+
     /// <summary>
     /// Computes the SHA-512 hash of a UTF-8 encoded string.
     /// </summary>
@@ -36,6 +39,7 @@ public static class HashHelper
         if (input == null) throw new ArgumentNullException(nameof(input));
         return Sha512(Encoding.UTF8.GetBytes(input));
     }
+
     /// <summary>
     /// Computes the SHA-512 hash of a byte array.
     /// </summary>
@@ -48,6 +52,7 @@ public static class HashHelper
         var hash = sha.ComputeHash(input);
         return Convert.ToHexString(hash).ToLowerInvariant();
     }
+
     /// <summary>
     /// Computes an HMAC-SHA256 digest using a UTF-8 encoded secret key.
     /// </summary>
@@ -63,6 +68,7 @@ public static class HashHelper
         using var hmac = new HMACSHA256(key);
         return Convert.ToHexString(hmac.ComputeHash(value)).ToLowerInvariant();
     }
+
     /// <summary>
     /// Verifies that a string's SHA-256 hash matches an expected hexadecimal value.
     /// </summary>

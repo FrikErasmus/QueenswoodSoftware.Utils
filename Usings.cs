@@ -1,4 +1,4 @@
-global using Library.Models;
+global using QueenswoodSoftware.Utils.Models;
 global using Microsoft.Data.SqlClient;
 global using Microsoft.Extensions.Configuration;
 global using Newtonsoft.Json;

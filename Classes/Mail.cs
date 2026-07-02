@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using QueenswoodSoftware.Utils.Models;
 
-namespace Library.Classes;
+namespace QueenswoodSoftware.Utils.Classes;
 
 /// <summary>
 /// Sends SMTP email messages using configuration from the application settings.

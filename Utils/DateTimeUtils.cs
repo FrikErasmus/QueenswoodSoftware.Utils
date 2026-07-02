@@ -1,4 +1,4 @@
-﻿namespace Library.Utils
+﻿namespace QueenswoodSoftware.Utils.Utils
 {
     /// <summary>
     /// Provides static helpers for converting, comparing, and formatting dates and times.

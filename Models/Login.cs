@@ -1,5 +1,8 @@
-﻿namespace Library.Models;
+﻿namespace QueenswoodSoftware.Utils.Models;
 
+/// <summary>
+///
+/// </summary>
 public class User
 {
     public string? Username { get; set; }

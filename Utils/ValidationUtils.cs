@@ -1,6 +1,4 @@
-﻿using System.Net;
-
-namespace Library.Utils
+﻿namespace QueenswoodSoftware.Utils.Utils
 {
     /// <summary>
     /// Provides static helpers for validating user input, models, and common data formats.

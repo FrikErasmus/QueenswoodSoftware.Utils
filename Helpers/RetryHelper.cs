@@ -1,4 +1,5 @@
-﻿namespace Library.Helpers;
+﻿namespace QueenswoodSoftware.Utils.Helpers;
+
 /// <summary>
 /// Provides asynchronous retry execution with exponential backoff and optional jitter.
 /// </summary>
@@ -44,6 +45,7 @@ public static class RetryHelper
         }
         throw lastException ?? new InvalidOperationException("Retry failed without captured exception.");
     }
+
     /// <summary>
     /// Executes an asynchronous operation without a return value and retries on failure.
     /// </summary>
@@ -67,6 +69,7 @@ public static class RetryHelper
             return true;
         }, maxRetries, baseDelayMs, shouldRetry, cancellationToken);
     }
+
     /// <summary>
     /// Calculates the delay before the next retry using exponential backoff plus random jitter.
     /// </summary>

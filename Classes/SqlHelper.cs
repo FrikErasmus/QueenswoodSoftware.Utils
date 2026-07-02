@@ -1,5 +1,7 @@
-﻿using Microsoft.Data.SqlClient;
-namespace Library.Classes;
+﻿using QueenswoodSoftware.Utils.Models;
+
+namespace QueenswoodSoftware.Utils.Classes;
+
 /// <summary>
 /// Defines SQL execution operations for transactions, selects, and stored-procedure calls.
 /// </summary>
@@ -12,13 +14,15 @@ public interface ISqlHelper
     /// <param name="sqlConnection">The SQL connection to use.</param>
     /// <returns>A <see cref="ResponseMessage"/> indicating success or failure.</returns>
     public ResponseMessage SqlTransaction(List<SqlCommand> commands, SqlConnection sqlConnection);
+
     /// <summary>
     /// Executes a SQL select command and returns the result set.
     /// </summary>
     /// <param name="command">The select command to execute.</param>
     /// <param name="sqlConnection">The SQL connection to use.</param>
     /// <returns>A <see cref="ResponseMessage"/> containing serialized results or an error.</returns>
-    public ResponseMessage SqlSelect(SqlCommand command, SqlConnection sqlConnection);
+    public ResponseMessage<string> SqlSelect(SqlCommand command, SqlConnection sqlConnection);
+
     /// <summary>
     /// Executes ad hoc SQL text and maps the result set to model instances.
     /// </summary>
@@ -26,7 +30,8 @@ public interface ISqlHelper
     /// <param name="model">A template object used to determine the target model type.</param>
     /// <param name="sqlConnection">The SQL connection to use.</param>
     /// <returns>A <see cref="ResponseMessage"/> containing populated model objects or an error.</returns>
-    public ResponseMessage GenericSelect(string command, object model, SqlConnection sqlConnection);
+    public ResponseMessage<List<object>> GenericSelect(string command, object model, SqlConnection sqlConnection);
+
     /// <summary>
     /// Builds and executes a stored procedure from the properties of a model object.
     /// </summary>
@@ -34,8 +39,9 @@ public interface ISqlHelper
     /// <param name="modelObject">The object whose properties become command parameters.</param>
     /// <param name="sqlConnection">The SQL connection to use.</param>
     /// <returns>A <see cref="ResponseMessage"/> containing the procedure result or an error.</returns>
-    public ResponseMessage SqlBuilder(string storedProcedure, object modelObject, SqlConnection sqlConnection);
+    public ResponseMessage<string> SqlBuilder(string storedProcedure, object modelObject, SqlConnection sqlConnection);
 }
+
 /// <summary>
 /// Executes SQL commands with retry, transaction handling, and model mapping support.
 /// </summary>
@@ -148,13 +154,14 @@ public class SqlHelper : ISqlHelper
         }
         return new ResponseMessage { Success = true };
     }
+
     /// <summary>
     /// Receives a SQL select command and returns a data table with the results.
     /// </summary>
     /// <param name="command">The select command to execute.</param>
     /// <param name="sqlConnection">The SQL connection to use.</param>
     /// <returns>A <see cref="ResponseMessage"/> containing serialized results or an error.</returns>
-    public ResponseMessage SqlSelect(SqlCommand command, SqlConnection sqlConnection)
+    public ResponseMessage<string> SqlSelect(SqlCommand command, SqlConnection sqlConnection)
     {
         var restart = 0;
         var dataTable = new DataTable();
@@ -178,35 +185,29 @@ public class SqlHelper : ISqlHelper
                     goto Restart;
                 }
                 Log.Error(timeOutException, "Timeout occurred in SQL Select.");
-                return new ResponseMessage { Success = false, ShortDescription = timeOutException.Message, FullDescription = timeOutException.Message };
+                return new ResponseMessage<string> { Success = false, ShortDescription = timeOutException.Message, FullDescription = timeOutException.Message };
             }
             catch (SqlException sqlError)
             {
                 Log.Error(sqlError, "Error occurred in SQL Select");
                 Log.Information(command.CommandText.ToString());
-                return new ResponseMessage { Success = false, ShortDescription = "Error occurred during SQL Transaction", FullDescription = sqlError.Message };
+                return new ResponseMessage<string> { Success = false, ShortDescription = "Error occurred during SQL Transaction", FullDescription = sqlError.Message };
             }
         }
         catch (SqlException ex)
         {
             Log.Error("Unable to connect to the database.", ex);
-            return new ResponseMessage { Success = false, ShortDescription = "Unable to connect to the database.", FullDescription = ex.Message };
+            return new ResponseMessage<string> { Success = false, ShortDescription = "Unable to connect to the database.", FullDescription = ex.Message };
         }
         finally
         {
             if (sqlConnection.State != ConnectionState.Closed) sqlConnection.Close();
         }
         if (dataTable.Rows.Count == 0)
-        {
-            return new ResponseMessage
-            {
-                Object = null,
-                ShortDescription = "0 Record Found",
-                Success = true
-            };
-        }
-        return new ResponseMessage { Object = JsonConvert.SerializeObject(dataTable), Success = true };
+            return new ResponseMessage<string> { Data = null, ShortDescription = "0 Record Found", Success = true };
+        return new ResponseMessage<string> { Data = JsonConvert.SerializeObject(dataTable), Success = true };
     }
+
     /// <summary>
     /// Executes ad hoc SQL text and maps the result set to model instances.
     /// </summary>
@@ -214,37 +215,19 @@ public class SqlHelper : ISqlHelper
     /// <param name="model">A template object used to determine the target model type.</param>
     /// <param name="sqlConnection">The SQL connection to use.</param>
     /// <returns>A <see cref="ResponseMessage"/> containing populated model objects or an error.</returns>
-    public ResponseMessage GenericSelect(string command, object model, SqlConnection sqlConnection)
+    public ResponseMessage<List<object>> GenericSelect(string command, object model, SqlConnection sqlConnection)
     {
-        var sqlCommand = new SqlCommand(command)
-        {
-            CommandType = CommandType.Text
-        };
+        var sqlCommand = new SqlCommand(command) { CommandType = CommandType.Text };
         var result = SqlSelect(sqlCommand, sqlConnection);
         if (!result.Success)
-            return result;
-        if (result.Object == null)
-            return new ResponseMessage { Object = new List<object>(), Success = true, ShortDescription = result.ShortDescription };
-        DataTable dataTable;
-        if (result.Object is DataTable dt)
-        {
-            dataTable = dt;
-        }
-        else if (result.Object is string json)
-        {
-            dataTable = JsonConvert.DeserializeObject<DataTable>(json) ?? new DataTable();
-        }
-        else
-        {
-            return new ResponseMessage
-            {
-                Success = false,
-                ShortDescription = "Unexpected SQL result payload.",
-                FullDescription = $"Result type was {result.Object.GetType().FullName}"
-            };
-        }
-        return new ResponseMessage { Object = ModelInjector.PopulateModel(model, dataTable), Success = true };
+            return new ResponseMessage<List<object>> { Success = false, ShortDescription = result.ShortDescription, FullDescription = result.FullDescription };
+        if (result.Data == null)
+            return new ResponseMessage<List<object>> { Data = [], Success = true, ShortDescription = result.ShortDescription };
+
+        var dataTable = JsonConvert.DeserializeObject<DataTable>(result.Data) ?? new DataTable();
+        return new ResponseMessage<List<object>> { Data = ModelInjector.PopulateModel(model, dataTable), Success = true };
     }
+
     /// <summary>
     /// Creates a CRUD based on the model properties.
     /// </summary>
@@ -252,19 +235,17 @@ public class SqlHelper : ISqlHelper
     /// <param name="modelObject">The object whose properties become command parameters.</param>
     /// <param name="sqlConnection">The SQL connection to use.</param>
     /// <returns>A <see cref="ResponseMessage"/> containing the procedure result or an error.</returns>
-    public ResponseMessage SqlBuilder(string storedProcedure, object modelObject, SqlConnection sqlConnection)
+    public ResponseMessage<string> SqlBuilder(string storedProcedure, object modelObject, SqlConnection sqlConnection)
     {
-        var sqlCommand = new SqlCommand(storedProcedure)
-        {
-            CommandType = CommandType.StoredProcedure
-        };
+        var sqlCommand = new SqlCommand(storedProcedure) { CommandType = CommandType.StoredProcedure };
         foreach (var prop in modelObject.GetType().GetProperties())
         {
-            var propertyValue = prop.GetValue(modelObject, null) == null ? DBNull.Value : prop.GetValue(modelObject, null);
+            var propertyValue = prop.GetValue(modelObject, null) ?? DBNull.Value;
             sqlCommand.Parameters.AddWithValue($"@{prop.Name}", propertyValue);
         }
         return SqlSelect(sqlCommand, sqlConnection);
     }
+
     /// <summary>
     /// Builds a stored-procedure command from the properties of a model object.
     /// </summary>
@@ -284,6 +265,7 @@ public class SqlHelper : ISqlHelper
         }
         return sqlCommand;
     }
+
     /// <summary>
     /// Builds a stored-procedure command without parameters.
     /// </summary>
@@ -297,6 +279,7 @@ public class SqlHelper : ISqlHelper
         };
     }
 }
+
 /// <summary>
 /// Maps <see cref="DataRow"/> and <see cref="DataTable"/> results onto model objects.
 /// </summary>
@@ -322,6 +305,7 @@ public static class ModelInjector
         }
         return instance!;
     }
+
     /// <summary>
     /// Populates a list of model instances from all rows in a data table.
     /// </summary>

@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace Library.Helpers
+﻿namespace QueenswoodSoftware.Utils.Helpers
 {
     public class ListToDatatable
     {

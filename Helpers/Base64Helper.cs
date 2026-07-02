@@ -1,4 +1,4 @@
-﻿namespace Library.Helpers
+﻿namespace QueenswoodSoftware.Utils.Helpers
 {
     /// <summary>
     ///
@@ -27,7 +27,7 @@
                 ? base64String.Substring(base64String.IndexOf(",") + 1)
                 : base64String;
 
-            byte[] bytes = Convert.FromBase64String(cleanedBase64);
+            var bytes = Convert.FromBase64String(cleanedBase64);
             return new MemoryStream(bytes);
         }
     }

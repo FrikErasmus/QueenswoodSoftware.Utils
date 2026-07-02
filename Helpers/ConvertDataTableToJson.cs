@@ -1,7 +1,4 @@
-﻿using System.Numerics;
-using System.Text.Json.Nodes;
-
-namespace Library.Helpers
+﻿namespace QueenswoodSoftware.Utils.Helpers
 {
     /// <summary>
     /// Converts <see cref="DataTable"/> rows to JSON strings or strongly typed objects.

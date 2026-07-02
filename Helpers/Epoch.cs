@@ -1,4 +1,4 @@
-﻿namespace Library.Helpers
+﻿namespace QueenswoodSoftware.Utils.Helpers
 {
     /// <summary>
     /// Unix epoch helpers for hour-based authentication tokens.

@@ -1,8 +1,8 @@
-﻿using Library.Helpers;
-using Microsoft.Extensions.Configuration;
+﻿using QueenswoodSoftware.Utils.Helpers;
+using QueenswoodSoftware.Utils.Models;
 using RestSharp;
 
-namespace Library.Classes
+namespace QueenswoodSoftware.Utils.Classes
 {
     /// <summary>
     /// HTTP method identifiers used when calling remote API endpoints.
@@ -11,20 +11,28 @@ namespace Library.Classes
     {
         /// <summary>HTTP GET.</summary>
         GET,
+
         /// <summary>HTTP POST.</summary>
         POST,
+
         /// <summary>HTTP PUT.</summary>
         PUT,
+
         /// <summary>HTTP HEAD.</summary>
         HEAD,
+
         /// <summary>HTTP DELETE.</summary>
         DELETE,
+
         /// <summary>HTTP PATCH.</summary>
         PATCH,
+
         /// <summary>HTTP OPTIONS.</summary>
         OPTIONS,
+
         /// <summary>HTTP CONNECT.</summary>
         CONNECT,
+
         /// <summary>HTTP TRACE.</summary>
         TRACE
     }

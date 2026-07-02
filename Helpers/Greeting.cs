@@ -1,4 +1,4 @@
-﻿namespace Library.Helpers
+﻿namespace QueenswoodSoftware.Utils.Helpers
 {
     /// <summary>
     /// Time-of-day greeting text for UI display.

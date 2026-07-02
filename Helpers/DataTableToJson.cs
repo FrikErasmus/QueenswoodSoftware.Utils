@@ -1,4 +1,4 @@
-﻿namespace Library.Helpers
+﻿namespace QueenswoodSoftware.Utils.Helpers
 {
     /// <summary>
     /// Static helpers to serialize <see cref="DataTable"/> data to JSON or typed objects.

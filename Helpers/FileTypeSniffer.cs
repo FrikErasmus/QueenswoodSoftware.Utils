@@ -1,4 +1,5 @@
-﻿namespace Library.Helpers;
+﻿namespace QueenswoodSoftware.Utils.Helpers;
+
 /// <summary>
 /// Identifies common file types from magic-byte signatures at the start of a buffer.
 /// </summary>
@@ -15,6 +16,7 @@ public static class FileTypeSniffer
         { "tiff", new[] { new byte[] { 0x49, 0x49, 0x2A, 0x00 }, new byte[] { 0x4D, 0x4D, 0x00, 0x2A } } },
         { "zip", new[] { new byte[] { 0x50, 0x4B, 0x03, 0x04 } } }
     };
+
     /// <summary>
     /// Determines whether file bytes match the magic signature for the given extension.
     /// </summary>
@@ -30,6 +32,7 @@ public static class FileTypeSniffer
             return false;
         return signatureList.Any(signature => StartsWith(fileBytes, signature));
     }
+
     /// <summary>
     /// Detects the first matching file extension from known magic-byte signatures.
     /// </summary>
@@ -45,6 +48,7 @@ public static class FileTypeSniffer
         }
         return null;
     }
+
     /// <summary>
     /// Tests whether a byte buffer begins with the specified signature bytes.
     /// </summary>

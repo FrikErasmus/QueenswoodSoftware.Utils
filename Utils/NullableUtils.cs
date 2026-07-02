@@ -1,4 +1,4 @@
-﻿namespace Library.Utils
+﻿namespace QueenswoodSoftware.Utils.Utils
 {
     /// <summary>
     /// Provides static helpers for parsing strings into nullable value types and converting values for database use.

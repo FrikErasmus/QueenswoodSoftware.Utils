@@ -1,4 +1,5 @@
-﻿namespace Library.Helpers;
+﻿namespace QueenswoodSoftware.Utils.Helpers;
+
 /// <summary>
 /// Validation contract for passwords, model fields, numeric strings, email, and allowed upload extensions.
 /// </summary>
@@ -11,12 +12,14 @@ public interface IValidate
     /// <param name="msg">Error message when validation fails; empty when valid.</param>
     /// <returns>True when the password meets all strength rules; otherwise false.</returns>
     public bool PasswordStrength(string password, out string msg);
+
     /// <summary>
     /// Validates that no string property on a model contains disallowed characters.
     /// </summary>
     /// <param name="model">Object whose string properties are scanned.</param>
     /// <returns>True when all non-null string properties pass; otherwise false.</returns>
     public bool InvalidChars(object model);
+
     /// <summary>
     /// Validates that required properties on a model are not null except those named in the allow list.
     /// </summary>
@@ -24,24 +27,28 @@ public interface IValidate
     /// <param name="allowedNull">Property names permitted to be null.</param>
     /// <returns>True when all required properties have values; otherwise false.</returns>
     public bool NullFields(object model, List<string> allowedNull);
+
     /// <summary>
     /// Validates that each string in the list contains digits only.
     /// </summary>
     /// <param name="fieldTexts">Strings to validate as integers.</param>
     /// <returns>True when every entry matches the integer pattern; otherwise false.</returns>
     public bool IntOnlyFields(List<string> fieldTexts);
+
     /// <summary>
     /// Validates that each string in the list is a float or integer format.
     /// </summary>
     /// <param name="fieldTexts">Strings to validate as numeric values.</param>
     /// <returns>True when every entry matches float or integer patterns; otherwise false.</returns>
     public bool FloatOnlyFields(List<string> fieldTexts);
+
     /// <summary>
     /// Validates an email address format.
     /// </summary>
     /// <param name="email">Email address to test.</param>
     /// <returns>True when the email is non-empty and matches the expected pattern; otherwise false.</returns>
     public bool IsValidEmail(string? email);
+
     /// <summary>
     /// Determines whether a file extension is on the allowed upload list.
     /// </summary>
@@ -49,6 +56,7 @@ public interface IValidate
     /// <returns>True when the extension is permitted for upload.</returns>
     public bool IsValidExtention(string ext);
 }
+
 /// <summary>
 /// Model, password, email, and upload extension validation helpers.
 /// </summary>
@@ -68,8 +76,10 @@ public class Validations : IValidate
             @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
             RegexOptions.IgnoreCase);
     }
+
     /// <summary>Regular expression character class of disallowed input characters.</summary>
     public string ValidateJson = "[`&%^*#|+~?<={}]"; //JsonNode.Parse(File.ReadAllText("../EimLibrary/Validate.json"));
+
     /// <summary>
     /// Validates a support ticket model for illegal characters and required fields.
     /// </summary>
@@ -85,6 +95,7 @@ public class Validations : IValidate
         if (!NullFields(model, new List<string>())) msg = "Please complete all required fields.";
         return string.IsNullOrEmpty(msg);
     }
+
     /// <summary>
     /// Validates AlphaNumeric Only
     /// </summary>
@@ -95,6 +106,7 @@ public class Validations : IValidate
         var alphaNumeric = new Regex(@"^[a-zA-Z0-9]*$");
         return alphaNumeric.IsMatch(msg);
     }
+
     /// <summary>
     /// When a user changes their password, validate that the password meets the security requirements
     /// </summary>
@@ -122,6 +134,7 @@ public class Validations : IValidate
         return string.IsNullOrEmpty(msg);
         // if all tests pass, return true
     }
+
     /// <summary>
     /// validates a model to ensure no field contains an invalid char
     /// </summary>
@@ -141,6 +154,7 @@ public class Validations : IValidate
         return true; // if all fields pass, return true
         // _configuration["IllegalChars"]
     }
+
     /// <summary>
     /// validates a model to ensure no field is null (except if it is in the ListData allowedNull)
     /// </summary>
@@ -160,6 +174,7 @@ public class Validations : IValidate
         }
         return true; // if all fields pass, return true
     }
+
     /// <summary>
     /// validates a ListData<string> to ensure that each string is in the format of an int</string>
     /// </summary>
@@ -177,6 +192,7 @@ public class Validations : IValidate
         }
         return true; // if all strings pass, return true
     }
+
     /// <summary>
     /// validates a ListData<string> to ensure that each string is in the format of a float or int</string>
     /// </summary>
@@ -193,6 +209,7 @@ public class Validations : IValidate
         }
         return true; // if all strings pass, return true
     }
+
     /// <summary>
     /// Only this will be allowed to be uploaded
     /// </summary>

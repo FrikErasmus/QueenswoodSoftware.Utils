@@ -1,8 +1,4 @@
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using Serilog;
-
-namespace Library.Helpers;
+namespace QueenswoodSoftware.Utils.Helpers;
 
 /// <summary>
 /// Suppresses device push (FCM/Expo) when a user is in an out-of-office date range.

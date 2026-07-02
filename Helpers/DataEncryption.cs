@@ -1,7 +1,4 @@
-using Microsoft.Extensions.Configuration;
-using System.Security.Cryptography;
-
-namespace Library.Helpers;
+namespace QueenswoodSoftware.Utils.Helpers;
 
 public static class DataEncryption
 {

@@ -1,6 +1,6 @@
 ﻿using System.IO.Compression;
 
-namespace Library.Utils
+namespace QueenswoodSoftware.Utils.Utils
 {
     /// <summary>
     /// Provides static helpers for validating, uploading, copying, and reading files and directories.

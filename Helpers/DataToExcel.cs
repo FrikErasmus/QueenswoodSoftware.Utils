@@ -1,5 +1,4 @@
-﻿using ClosedXML.Excel;
-namespace Library.Helpers
+﻿namespace QueenswoodSoftware.Utils.Helpers
 {
     /// <summary>
     /// Exports tabular data to Excel workbooks or CSV streams.
@@ -22,6 +21,7 @@ namespace Library.Helpers
             stream.Position = 0;
             return stream;
         }
+
         /// <summary>
         /// Serializes a sequence of objects to a UTF-8 CSV memory stream with a BOM for Excel.
         /// </summary>
@@ -57,6 +57,7 @@ namespace Library.Helpers
             stream.Position = 0;
             return stream;
         }
+
         /// <summary>
         /// Escapes a CSV field value by quoting and doubling embedded quotes when required.
         /// </summary>

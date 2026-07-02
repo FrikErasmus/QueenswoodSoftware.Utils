@@ -1,4 +1,5 @@
-﻿namespace Library.Helpers;
+﻿namespace QueenswoodSoftware.Utils.Helpers;
+
 /// <summary>
 /// Contract for AES-based string encryption and decryption using the configured library key.
 /// </summary>
@@ -10,6 +11,7 @@ public interface ISecure
     /// <param name="clearText">Plain text to encrypt.</param>
     /// <returns>Base64-encoded ciphertext.</returns>
     public string Encrypt(string clearText);
+
     /// <summary>
     /// Decrypts ciphertext produced by <see cref="Encrypt(string)"/>.
     /// </summary>
@@ -17,6 +19,7 @@ public interface ISecure
     /// <returns>Decrypted plain text.</returns>
     public string Decrypt(string clearText);
 }
+
 /// <summary>
 /// AES and legacy Triple-DES encryption helpers with key resolution from environment or legacy default.
 /// </summary>
@@ -24,6 +27,7 @@ public class Secure
 {
     private const string LegacyEncryptionKey = "MAKV2SPBNI99212";
     private static readonly byte[] Salt = { 0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76 };
+
     /// <summary>
     /// Resolves the encryption passphrase from <c>LIBRARY_ENCRYPTION_KEY</c> or falls back to the legacy default with a warning.
     /// </summary>
@@ -36,6 +40,7 @@ public class Secure
         Log.Warning("LIBRARY_ENCRYPTION_KEY not set; using legacy default encryption key.");
         return LegacyEncryptionKey;
     }
+
     /// <summary>
     /// Encrypts clear text using AES and a key derived from <see cref="ResolveEncryptionKey"/>.
     /// </summary>
@@ -57,6 +62,7 @@ public class Secure
         clearText = Convert.ToBase64String(ms.ToArray());
         return clearText;
     }
+
     /// <summary>
     /// Decrypts AES ciphertext produced by the instance <see cref="Encrypt(string)"/> method.
     /// </summary>
@@ -78,6 +84,7 @@ public class Secure
         cipherText = Encoding.Unicode.GetString(ms.ToArray());
         return cipherText;
     }
+
     /// <summary>
     /// Encrypts plain text using legacy Triple-DES with an MD5-derived key from the supplied passphrase.
     /// </summary>
@@ -97,6 +104,7 @@ public class Secure
             Convert.ToBase64String(desCryptoProvider.CreateEncryptor().TransformFinalBlock(byteBuff, 0, byteBuff.Length));
         return encoded;
     }
+
     /// <summary>
     /// Decrypts legacy Triple-DES ciphertext using an MD5-derived key from the supplied passphrase.
     /// </summary>
