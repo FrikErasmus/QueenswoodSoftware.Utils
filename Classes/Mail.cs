@@ -3,9 +3,20 @@
 namespace QueenswoodSoftware.Utils.Classes;
 
 /// <summary>
+/// Contract for SMTP email sending.
+/// </summary>
+public interface IMail
+{
+    /// <summary>
+    /// Sends an email message using the configured SMTP server and credentials.
+    /// </summary>
+    Task SendMail(MailObject mailObject);
+}
+
+/// <summary>
 /// Sends SMTP email messages using configuration from the application settings.
 /// </summary>
-public class Mail
+public class Mail : IMail
 {
     private readonly IConfiguration _config;
 
@@ -27,34 +38,36 @@ public class Mail
     {
         try
         {
-            var smtpClient = new SmtpClient(_config["Mail:Server"], int.Parse(_config["Mail:Port"]!));
+            var host = _config["Mail:Server"] ?? _config["Mail:Host"];
+            var smtpClient = new SmtpClient(host, int.Parse(_config["Mail:Port"]!));
 
             var mail = new MailMessage();
 
-            mail.From = mailObject.From ?? new MailAddress(_config["Mail:From"]!, _config["Mail:Name"]!);
+            mail.From = mailObject.From ?? new MailAddress(
+                _config["Mail:From"]!,
+                _config["Mail:Name"] ?? _config["Mail:PortalName"] ?? _config["Mail:From"]!);
 
-            //Loop To
             foreach (var t in mailObject.To!)
             {
-                mail.To.Add(t.Address);// declare the email to
+                mail.To.Add(t.Address);
             }
-            //Loop Cc
+
             if (mailObject.Cc != null)
             {
                 foreach (var t in mailObject.Cc!)
                 {
-                    mail.CC.Add(t.Address);// declare the email to
+                    mail.CC.Add(t.Address);
                 }
             }
-            //Loop Bcc
+
             if (mailObject.Bcc != null)
             {
                 foreach (var t in mailObject.Bcc!)
                 {
-                    mail.Bcc.Add(t.Address);// declare the email to
+                    mail.Bcc.Add(t.Address);
                 }
             }
-            //Loop Attachments
+
             if (mailObject.Attachments != null)
             {
                 foreach (var t in mailObject.Attachments!)
@@ -69,13 +82,9 @@ public class Mail
                 mail.Body = mailObject.Body;
                 mail.IsBodyHtml = true;
 
-                // enable SSL for encryption across channels
                 smtpClient.EnableSsl = true;
-                // Port 465 for SSL communication
                 smtpClient.Port = int.Parse(_config["Mail:Port"]!);
-                // Provide authentication information with Gmail SMTP server to authenticate your sender account
                 smtpClient.Credentials = new System.Net.NetworkCredential(_config["Mail:UserName"], _config["Mail:Password"]);
-                //Send the mail
                 smtpClient.Send(mail);
 
                 smtpClient.Dispose();

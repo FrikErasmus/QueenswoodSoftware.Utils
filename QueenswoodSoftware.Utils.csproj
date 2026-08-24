@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>QueenswoodSoftware.Utils</PackageId>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <Title>QueenswoodSoftware.Utils</Title>
     <Authors>Frik Erasmus</Authors>
     <Company>Queenswood Software</Company>
