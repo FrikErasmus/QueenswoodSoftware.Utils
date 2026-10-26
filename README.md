@@ -4,7 +4,7 @@
 
 [![NuGet](https://img.shields.io/nuget/v/QueenswoodSoftware.Utils)](https://www.nuget.org/packages/QueenswoodSoftware.Utils)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.txt)
-[![.NET](https://img.shields.io/badge/.NET-9.0-blue)](https://dotnet.microsoft.com)
+[![.NET](https://img.shields.io/badge/.NET-10.0-blue)](https://dotnet.microsoft.com)
 
 ---
 
@@ -78,6 +78,15 @@ await mail.SendMail(new MailObject
     Subject = "Hello",
     Body = "<p>Hello World</p>"
 });
+
+var result = await mail.TrySendMailAsync(new MailObject
+{
+    To = [new MailAddress("recipient@example.com")],
+    Subject = "Hello",
+    Body = "<p>Hello World</p>"
+}, cancellationToken);
+if (!result.Success)
+    Console.WriteLine(result.ShortDescription);
 ```
 
 ---
@@ -92,6 +101,19 @@ var dt = SqlHelper.SqlSelect("SELECT * FROM Users WHERE Id = @Id",
 
 SqlHelper.SqlTransaction("UPDATE Users SET Name = @Name WHERE Id = @Id",
     new[] { new SqlParameter("@Name", name), new SqlParameter("@Id", id) }, connectionString);
+```
+
+---
+
+### `DataToExcel`
+
+```csharp
+DataToExcel.DataTableToExcel(table, "Export", "Sheet1");
+DataToExcel.DataTablesToExcel(new[]
+{
+    ("Orders", ordersTable),
+    ("Lines", linesTable)
+});
 ```
 
 ---
@@ -275,7 +297,13 @@ if (DataEncryption.TryDecrypt(config, cipherText, out var plain)) { }
 bool needsMigration = DataEncryption.UsesLegacyKeyOnly(config, cipherText);
 ```
 
-Requires `appsettings.json`:
+`Secure` resolves its AES key from `LIBRARY_ENCRYPTION_KEY`, then `Secure.ConfiguredKey`, then a legacy default.
+
+```csharp
+Secure.ConfiguredKey = configuration["Security:LibraryEncryptionKey"];
+```
+
+`DataEncryption` requires `appsettings.json`:
 ```json
 { "Security": { "EncryptionKey": "your-key", "LegacyEncryptionKey": "old-key" } }
 ```
@@ -448,7 +476,7 @@ Add to your `appsettings.json` as needed:
 
 ## Requirements
 
-- .NET 9.0 or later
+- .NET 10.0 or later
 
 ---
 

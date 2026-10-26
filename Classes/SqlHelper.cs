@@ -308,17 +308,83 @@ public static class ModelInjector
     /// <returns>A populated model instance.</returns>
     public static object PopulateModel(object target, DataRow source)
     {
-        var instance = Activator.CreateInstance(target.GetType()); // Create a variable with the dataType of the object passed
-        // for each column in the Row passed
+        var targetType = target.GetType();
+        var instance = Activator.CreateInstance(targetType);
+
         foreach (DataColumn column in source.Table.Columns)
         {
-            var activeTarget = target.GetType().GetProperty(column.ColumnName); // Create a variable with the dataType of the current column
-            if (activeTarget == null) continue;
+            var property = targetType.GetProperty(column.ColumnName,
+                BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+            if (property == null || !property.CanWrite) continue;
+
             var value = source[column];
-            if (value == DBNull.Value) continue;
-            activeTarget.SetValue(instance, value); // assign the value to the column in the object
+            if (value == DBNull.Value || value == null) continue;
+
+            try
+            {
+                property.SetValue(instance, ConvertValue(value, property.PropertyType));
+            }
+            catch (Exception ex)
+            {
+                // Skip the single bad value rather than losing the whole row.
+                Log.Warning(ex, "ModelInjector: could not map column {Column} ({ValueType}) to {Model}.{Property} ({PropertyType}). Value: {Value}",
+                    column.ColumnName, value.GetType().Name, targetType.Name, property.Name, property.PropertyType.Name, value);
+            }
         }
         return instance!;
+    }
+
+    /// <summary>
+    /// Converts a column value to the target property type. Needed because DataTables built from
+    /// JSON infer column types from the first row only, so later rows can arrive as a different type
+    /// (e.g. a date as string when row 1 had NULL).
+    /// </summary>
+    private static object? ConvertValue(object value, Type propertyType)
+    {
+        var type = Nullable.GetUnderlyingType(propertyType) ?? propertyType;
+        var isNullable = !propertyType.IsValueType || Nullable.GetUnderlyingType(propertyType) != null;
+
+        if (type.IsInstanceOfType(value)) return value;
+
+        if (type == typeof(string))
+        {
+            return value switch
+            {
+                DateTime dt => dt.ToString("yyyy-MM-ddTHH:mm:ss.FFFFFFF", CultureInfo.InvariantCulture),
+                DateTimeOffset dto => dto.ToString("o", CultureInfo.InvariantCulture),
+                IFormattable f => f.ToString(null, CultureInfo.InvariantCulture),
+                _ => value.ToString()
+            };
+        }
+
+        if (value is string s)
+        {
+            s = s.Trim();
+            if (s.Length == 0) return isNullable ? null : Activator.CreateInstance(type);
+
+            if (type == typeof(DateTime))
+            {
+                if (DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var inv)) return inv;
+                return DateTime.Parse(s, CultureInfo.CurrentCulture);
+            }
+            if (type == typeof(DateTimeOffset)) return DateTimeOffset.Parse(s, CultureInfo.InvariantCulture);
+            if (type == typeof(TimeSpan)) return TimeSpan.Parse(s, CultureInfo.InvariantCulture);
+            if (type == typeof(Guid)) return Guid.Parse(s);
+            if (type == typeof(bool))
+            {
+                if (s == "1") return true;
+                if (s == "0") return false;
+                return bool.Parse(s);
+            }
+            if (type.IsEnum) return Enum.Parse(type, s, ignoreCase: true);
+
+            return Convert.ChangeType(s, type, CultureInfo.InvariantCulture);
+        }
+
+        if (type.IsEnum) return Enum.ToObject(type, value);
+        if (type == typeof(Guid)) return Guid.Parse(value.ToString()!);
+
+        return Convert.ChangeType(value, type, CultureInfo.InvariantCulture);
     }
 
     /// <summary>
@@ -329,17 +395,22 @@ public static class ModelInjector
     /// <returns>A list of populated model instances.</returns>
     public static List<object> PopulateModel(object target, DataTable source)
     {
-        var result = new List<object>();
-        try
+        var result = new List<object>(source.Rows.Count);
+        var rowIndex = 0;
+
+        foreach (DataRow row in source.Rows)
         {
-            foreach (DataRow row in source.Rows)
+            try
             {
                 result.Add(PopulateModel(target, row));
             }
-        }
-        catch
-        {
-            //Redundant
+            catch (Exception ex)
+            {
+                // One bad row must not truncate the rest of the list.
+                Log.Error(ex, "ModelInjector: failed to map row {RowIndex} of {RowCount} to {Model}; row skipped.",
+                    rowIndex, source.Rows.Count, target.GetType().Name);
+            }
+            rowIndex++;
         }
         return result;
     }

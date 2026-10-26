@@ -1,4 +1,4 @@
-﻿namespace QueenswoodSoftware.Utils.Helpers
+namespace QueenswoodSoftware.Utils.Helpers
 {
     /// <summary>
     /// Exports tabular data to Excel workbooks or CSV streams.
@@ -16,6 +16,22 @@
         {
             using var wb = new XLWorkbook();
             wb.Worksheets.Add(dt, sheetName);
+            var stream = new MemoryStream();
+            wb.SaveAs(stream);
+            stream.Position = 0;
+            return stream;
+        }
+
+        /// <summary>
+        /// Returns an XLSX memory stream with one worksheet per table.
+        /// </summary>
+        /// <param name="sheets">Worksheet names and the tables to write to them.</param>
+        /// <returns>Memory stream containing the saved XLSX workbook, positioned at the start.</returns>
+        public static MemoryStream DataTablesToExcel(IEnumerable<(string SheetName, DataTable Table)> sheets)
+        {
+            using var wb = new XLWorkbook();
+            foreach (var (sheetName, table) in sheets)
+                wb.Worksheets.Add(table, sheetName);
             var stream = new MemoryStream();
             wb.SaveAs(stream);
             stream.Position = 0;

@@ -1,4 +1,4 @@
-﻿namespace QueenswoodSoftware.Utils.Helpers;
+namespace QueenswoodSoftware.Utils.Helpers;
 
 /// <summary>
 /// Contract for AES-based string encryption and decryption using the configured library key.
@@ -29,7 +29,13 @@ public class Secure
     private static readonly byte[] Salt = { 0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76 };
 
     /// <summary>
-    /// Resolves the encryption passphrase from <c>LIBRARY_ENCRYPTION_KEY</c> or falls back to the legacy default with a warning.
+    /// Key supplied by the host at startup. Checked after <c>LIBRARY_ENCRYPTION_KEY</c> and before the legacy default.
+    /// </summary>
+    public static string? ConfiguredKey { get; set; }
+
+    /// <summary>
+    /// Resolves the encryption passphrase from <c>LIBRARY_ENCRYPTION_KEY</c>, then <see cref="ConfiguredKey"/>,
+    /// then the legacy default.
     /// </summary>
     /// <returns>Encryption key string used for Rfc2898DeriveBytes.</returns>
     private static string ResolveEncryptionKey()
@@ -37,7 +43,9 @@ public class Secure
         var key = Environment.GetEnvironmentVariable("LIBRARY_ENCRYPTION_KEY");
         if (!string.IsNullOrWhiteSpace(key))
             return key;
-        Log.Warning("LIBRARY_ENCRYPTION_KEY not set; using legacy default encryption key.");
+        if (!string.IsNullOrWhiteSpace(ConfiguredKey))
+            return ConfiguredKey;
+        Log.Warning("LIBRARY_ENCRYPTION_KEY and ConfiguredKey are not set; using legacy default encryption key.");
         return LegacyEncryptionKey;
     }
 
